@@ -1,0 +1,98 @@
+#!/bin/bash
+
+# Create a new directory and enter it.
+function md() {
+    mkdir -p "$@" && cd "$@"
+}
+
+# Find shorthand.
+function f() {
+    find . -name "$1"
+}
+
+# Replace \r\n line endings in a file with \n.
+function fixlines() {
+    /usr/bin/perl -pi~ -e 's/\r\n?/\n/g' "$@" ;
+}
+
+# Open man page as PostScript document in Preview.
+function psman() {
+    man -t $@ | open -f -a Preview
+}
+
+# Execute sql on mysql with progress bar: mysqlimport FILE_NAMES... DB_NAME
+# Replies on an alias 'mysqlcon'
+function mysqlimport() {
+    local scripts_count=`expr $# - 1`
+    pv "${@:1:scripts_count}" | mysqlcon "${@: -1}"
+}
+
+# cd into whatever is the forefront Finder window.
+function cdfinder() {
+    cd "`osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)'`"
+}
+
+# git log with per-commit cmd-clickable GitHub URLs (iTerm).
+function gf() {
+    local remote="$(git remote -v | awk '/^origin.*\(push\)$/ {print $2}')"
+    [[ "$remote" ]] || return
+    local user_repo="$(echo "$remote" | perl -pe 's/.*://;s/\.git$//')"
+    git log $* --name-status --color | awk "$(cat <<AWK
+        /^.*commit [0-9a-f]{40}/ {sha=substr(\$2,1,7)}
+        /^[MA]\t/ {printf "%s\thttps://github.com/$user_repo/blob/%s/%s\n", \$1, sha, \$2; next}
+        /.*/ {print \$0}
+AWK
+    )" | less -F
+}
+
+# Copy w/ progress.
+function cp_p () {
+    rsync -WavP --human-readable --progress $1 $2
+}
+
+# Extract archives - use: extract <file>
+# Based on http://dotfiles.org/~pseup/.bashrc
+# Usage: extract <file>
+# Description: extracts archived files / mounts disk images
+# Note: .dmg/hdiutil is Mac OS X-specific.
+function extract() {
+    if [ -f "$1" ] ; then
+        local filename=$(basename "$1")
+        local foldername="${filename%%.*}"
+        local fullpath=`perl -e 'use Cwd "abs_path";print abs_path(shift)' "$1"`
+        local didfolderexist=false
+        if [ -d "$foldername" ]; then
+            didfolderexist=true
+            read -p "$foldername already exists, do you want to overwrite it? (y/n) " -n 1
+            echo
+            if [[ $REPLY =~ ^[Nn]$ ]]; then
+                return
+            fi
+        fi
+        mkdir -p "$foldername" && cd "$foldername"
+        case $1 in
+            *.tar.bz2) tar xjf "$fullpath"  ;;
+            *.tar.gz)  tar xzf "$fullpath"  ;;
+            *.tar.xz)  tar Jxvf "$fullpath" ;;
+            *.tar.Z)   tar xzf "$fullpath"  ;;
+            *.tar)     tar xf "$fullpath"   ;;
+            *.taz)     tar xzf "$fullpath"  ;;
+            *.tb2)     tar xjf "$fullpath"  ;;
+            *.tbz)     tar xjf "$fullpath"  ;;
+            *.tbz2)    tar xjf "$fullpath"  ;;
+            *.tgz)     tar xzf "$fullpath"  ;;
+            *.txz)     tar Jxvf "$fullpath" ;;
+            *.bz2)     bunzip2 $1           ;;
+            *.dmg)     hdiutil mount $1     ;;
+            *.gz)      gunzip $1            ;;
+            *.zip)     unzip "$fullpath"    ;;
+            *.ZIP)     unzip "$fullpath"    ;;
+            *.pax)     cat $1 | pax -r      ;;
+            *.pax.Z)   uncompress $1 --stdout | pax -r ;;
+            *.Z)       uncompress $1        ;;
+            *) echo "'$1' cannot be extracted via extract()" && cd .. && ! $didfolderexist && rm -r "$foldername" ;;
+        esac
+    else
+        echo "'$1' is not a valid file"
+    fi
+}
