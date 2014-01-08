@@ -23,6 +23,11 @@ function psman() {
 # Execute sql on mysql with progress bar: mysqlimport FILE_NAMES... DB_NAME
 # Replies on an alias 'mysqlcon'
 function mysqlimport() {
+    if [ $# -lt 2 ]; then
+        echo "Usage: mysqlimport FILE_NAMES... DB_NAME"
+        return 1
+    fi
+
     local scripts_count=`expr $# - 1`
     pv "${@:1:scripts_count}" | mysqlcon "${@: -1}"
 }
