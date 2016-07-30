@@ -4,10 +4,11 @@ export EDITOR="vim"
 
 export JAVA6_HOME=`/usr/libexec/java_home -v 1.6`
 export JAVA7_HOME=`/usr/libexec/java_home -v 1.7`
-export JAVA_HOME="${JAVA7_HOME}"
+export JAVA8_HOME=`/usr/libexec/java_home -v 1.8`
+export JAVA_HOME="${JAVA8_HOME}"
 
 export XMLBEANS_HOME="/usr/local/xmlbeans-2.5.0"
-export SCALA_HOME="/usr/local/scala-2.9.1.final"
+#export SCALA_HOME="/usr/local/scala-2.11.7"
 export MYSQL_HOME="/usr/local/mysql"
 
 # Add ~/bin to $PATH if exists
@@ -16,5 +17,6 @@ if [ -d ${HOME}/bin ]; then
 fi
 
 export PATH="${PATH}:${XMLBEANS_HOME}/bin"
-export PATH="${PATH}:${SCALA_HOME}/bin"
+#export PATH="${PATH}:${SCALA_HOME}/bin"
 export PATH="${PATH}:${MYSQL_HOME}/bin"
+export PATH="${PATH}:/usr/local/go/bin"

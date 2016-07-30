@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------------------
 # Core
 if [ $# -lt 2 ]; then
-    echo "install.sh \"GIT_USERNAME\" \"GIT_USETEMAIL\""
+    echo "install.sh \"GIT_USERNAME\" \"GIT_USEREMAIL\""
     exit 1
 fi
 

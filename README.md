@@ -17,4 +17,5 @@
 - mysql
 - xmlbeans
 - scala
+- go
 - ...
