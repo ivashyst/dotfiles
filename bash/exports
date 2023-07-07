@@ -2,18 +2,16 @@
 
 export EDITOR="vim"
 
-# Java
-export JAVA6_HOME=`/usr/libexec/java_home -v 1.6`
-export JAVA7_HOME=`/usr/libexec/java_home -v 1.7`
-export JAVA8_HOME=`/usr/libexec/java_home -v 1.8`
-export JAVA_HOME="${JAVA8_HOME}"
+# Set PATH, MANPATH, etc., for Homebrew.
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# MySQL
-export MYSQL_HOME="/usr/local/mysql"
-export PATH="${PATH}:${MYSQL_HOME}/bin"
+# Add IntelliJ IDEA command
+PATH="${PATH}:/Applications/IntelliJ IDEA.app/Contents/MacOS"
 
-# golang
-export PATH="${PATH}:/usr/local/go/bin"
+# Configure Homebrew's completions
+#FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+
+ICLOUD_PATH="${HOME}/Library/Mobile Documents/com~apple~CloudDocs"
 
 # Add ~/bin to $PATH if exists
 if [ -d ${HOME}/bin ]; then
