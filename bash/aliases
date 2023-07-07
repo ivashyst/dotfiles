@@ -4,3 +4,7 @@ alias ll="ls -l"
 alias ..="cd .."
 
 alias md5sum="md5"
+
+alias pyhttp="python3 -m http.server"
+alias prettyjson="python3 -m json.tool"
+alias prettyxml="python3 -c 'import sys;import xml.dom.minidom;s=sys.stdin.read();print(xml.dom.minidom.parseString(s).toprettyxml())'"
