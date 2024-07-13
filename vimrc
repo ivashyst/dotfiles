@@ -1,3 +1,4 @@
+set ruler               " show status bar with cursor position
 set ai                  " auto indenting
 set shiftwidth=4        " use indents of 4 spaces
 set expandtab           " tabs are spaces, not tabs
